@@ -72,7 +72,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           : ListView.builder(
               itemCount: images.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
+                return SizedBox(
                   height: 200,
                   child: Image.file(
                     File(images[index]!.path),

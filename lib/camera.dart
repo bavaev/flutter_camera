@@ -52,6 +52,38 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     });
   }
 
+  Future<void> _onNewCameraSelected(CameraDescription cameraDescription) async {
+    final CameraController? oldController = controller;
+    if (oldController != null) {
+      controller = null;
+      await oldController.dispose();
+    }
+
+    final CameraController cameraController = CameraController(
+      cameraDescription,
+      kIsWeb ? ResolutionPreset.max : ResolutionPreset.medium,
+      imageFormatGroup: ImageFormatGroup.jpeg,
+    );
+
+    controller = cameraController;
+
+    cameraController.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,37 +135,5 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         onTap: _onSelectPage,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
-
-  Future<void> _onNewCameraSelected(CameraDescription cameraDescription) async {
-    final CameraController? oldController = controller;
-    if (oldController != null) {
-      controller = null;
-      await oldController.dispose();
-    }
-
-    final CameraController cameraController = CameraController(
-      cameraDescription,
-      kIsWeb ? ResolutionPreset.max : ResolutionPreset.medium,
-      imageFormatGroup: ImageFormatGroup.jpeg,
-    );
-
-    controller = cameraController;
-
-    cameraController.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-
-    if (mounted) {
-      setState(() {});
-    }
   }
 }
